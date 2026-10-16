@@ -1,0 +1,38 @@
+# Last updated: 10/16/2026, 3:46:10 PM
+1class Solution:
+2    def isBipartite(self, graph: list[list[int]]) -> bool:
+3        # this is not a union find question bruh a dfs from every node would work way better
+4
+5        adj = defaultdict(list)
+6        bipar = defaultdict(int)
+7
+8        # make sure to read Q to see how the nodes are given. in this case it is not [node, node] but rather the index of the 2d array is the node and valaues inside are the other nodes
+9        for u in range(len(graph)):
+10            for v in graph[u]:
+11                adj[u].append(v)
+12                adj[v].append(u)
+13
+14        def dfs(node, oneorzero):
+15            
+16            oneorzero = 1 if oneorzero == 0 else 0
+17            bipar[node] = oneorzero # flipping it 1 or 0
+18            
+19            result = True
+20            for nei in adj[node]:
+21                if nei in bipar:
+22                    if bipar[nei] == oneorzero: # if same
+23                        return False
+24                    # if true, then we visited, dont visit it again
+25                else:
+26                    result = result and dfs(nei, oneorzero)
+27            return result
+28        
+29        for node in adj.keys(): # every node
+30            if node in bipar:
+31                continue # we alr visited
+32            
+33            # else
+34            result = dfs(node, 0)
+35            if result == False:
+36                return False
+37        return True
